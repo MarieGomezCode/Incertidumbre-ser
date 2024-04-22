@@ -16,4 +16,18 @@ public class UsuarioController {
     public Usuario registrarUsuario(@RequestBody Usuario usuario) {
         return usuarioService.registrarUsuario(usuario);
     }
+    @DeleteMapping("/eliminar/{id}")
+    public void eliminarUsuario(@PathVariable Long id) {
+        usuarioService.eliminarUsuario(id);
+    }
+    @PutMapping("/actualizar/{id}")
+    public Usuario actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioActualizado) {
+        return usuarioService.actualizarUsuario(id, usuarioActualizado);
+    }
+    @PostMapping("/iniciar-sesion")
+    public Usuario iniciarSesion(@RequestParam String usuario, @RequestParam String contraseña) {
+        return usuarioService.iniciarSesion(usuario, contraseña);
+    }
+
+
 }

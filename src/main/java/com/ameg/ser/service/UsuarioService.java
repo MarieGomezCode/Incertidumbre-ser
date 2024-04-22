@@ -52,4 +52,49 @@ public class UsuarioService {
         // Aquí puedes implementar la lógica para validar la contraseña
         return true; // Por ahora, simplemente retornamos true para fines de demostración
     }
+    public void eliminarUsuario(Long id) {
+        // Verificar si el usuario existe
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            usuarioRepository.delete(usuarioOptional.get());
+        } else {
+            throw new IllegalArgumentException("Usuario no encontrado");
+        }
+    }
+
+    public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) {
+        // Verificar si el usuario existe
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuarioExistente = usuarioOptional.get();
+            // Actualizar los campos del usuario
+            usuarioExistente.setNombre(usuarioActualizado.getNombre());
+            usuarioExistente.setNombreUsuario(usuarioActualizado.getNombreUsuario());
+            usuarioExistente.setFechaNacimiento(usuarioActualizado.getFechaNacimiento());
+            usuarioExistente.setCorreo(usuarioActualizado.getCorreo());
+            usuarioExistente.setContraseña(usuarioActualizado.getContraseña());
+            usuarioExistente.setNumeroTelefono(usuarioActualizado.getNumeroTelefono());
+            // Guardar los cambios
+            return usuarioRepository.save(usuarioExistente);
+        } else {
+            throw new IllegalArgumentException("Usuario no encontrado");
+        }
+    }
+    public Usuario iniciarSesion(String usuario, String contraseña) {
+        // Buscar usuario por nombre de usuario o correo electrónico
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByNombreUsuarioOrCorreo(usuario, usuario);
+        // Verificar si se encontró un usuario
+        if (usuarioOptional.isPresent()) {
+            Usuario usuarioEncontrado = usuarioOptional.get();
+            // Verificar si la contraseña coincide
+            if (usuarioEncontrado.getContraseña().equals(contraseña)) {
+                return usuarioEncontrado;
+            }
+        }
+        // Si no se encontró un usuario o la contraseña no coincide, lanzar una excepción
+        throw new IllegalArgumentException("Credenciales inválidas");
+    }
+
+
+
 }
